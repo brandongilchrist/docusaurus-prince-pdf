@@ -66,6 +66,62 @@ docker run --rm -it --init \
   openbayes/docusaurus-prince-pdf \
   -u https://docusaurus.io/docs/
 ```
+# Fork Description (for GitHub fork description)
+Fork focused on modernizing Docker implementation with multi-arch support and improved build process using compiled binary
+
+# README.md changes
+Add this section after the Docker section:
+
+## Docker Implementation Changes
+
+This fork includes several improvements to the Docker implementation:
+
+- Uses compiled binary (`dpdf`) instead of running TypeScript directly for better performance
+- Updated to Prince 15.1 for improved PDF generation
+- Added proper multi-architecture support (amd64/arm64)
+- Improved caching of build layers for faster builds
+- Uses production dependencies only in final image for smaller size
+
+### Building the Docker image
+
+```bash
+# Build for your current architecture
+docker build -t docusaurus-prince-pdf:latest .
+
+# Build for multiple architectures
+docker buildx build --platform linux/amd64,linux/arm64 -t yourusername/docusaurus-prince-pdf:latest .
+```
+
+### Running the Docker image
+
+The usage remains the same as the original:
+
+```bash
+docker run --rm -it -v $(pwd)/pdf:/app/pdf docusaurus-prince-pdf:latest -u https://docusaurus.io/docs/
+```
+
+For Asian language support, mount your fonts directory:
+
+```bash
+docker run --rm -it \
+  -v $(pwd)/pdf:/app/pdf \
+  -v $(pwd)/fonts:/root/.fonts \
+  docusaurus-prince-pdf:latest \
+  -u https://docusaurus.io/docs/
+```
+
+### Performance Improvements
+
+The compiled binary approach provides several benefits:
+- Faster startup time
+- Reduced memory usage
+- Smaller image size due to exclusion of development dependencies
+- Better runtime performance
+
+### Contributing
+
+If you find any issues or have suggestions for further Docker-related improvements, please feel free to open an issue or submit a PR!
+
 
 ## GitHub Actions
 
